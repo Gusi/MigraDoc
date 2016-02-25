@@ -221,6 +221,7 @@ namespace MigraDoc.DocumentObjectModel
             style.Font.Size = 10;
             style.Font.Bold = false;
             style.Font.Italic = false;
+			style.Font.Strikethrough = false; // SRG
             style.Font.Underline = Underline.None;
             style.Font.Color = Colors.Black;
             style.Font.Subscript = false;

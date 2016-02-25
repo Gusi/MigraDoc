@@ -97,6 +97,12 @@ namespace MigraDoc.DocumentObjectModel
             if (!font._italic.IsNull && (refFont == null || font.Italic != refFont.Italic))
                 Italic = font.Italic;
 
+			// SRG
+			//@{
+			if (!font._strikethrough.IsNull && (refFont == null || font.Strikethrough != refFont.Strikethrough))
+				Strikethrough = font.Strikethrough;
+			//@}
+
             if (!font._subscript.IsNull && (refFont == null || font.Subscript != refFont.Subscript))
                 Subscript = font.Subscript;
             else if (!font._superscript.IsNull && (refFont == null || font.Superscript != refFont.Superscript))
@@ -128,6 +134,12 @@ namespace MigraDoc.DocumentObjectModel
 
             if (!font._italic.IsNull)
                 Italic = font.Italic;
+
+			// SRG
+			//@{
+			if (!font._strikethrough.IsNull)
+				this.Strikethrough = font.Strikethrough;
+			//@}
 
             if (!font._subscript.IsNull)
                 Subscript = font.Subscript;
@@ -186,6 +198,17 @@ namespace MigraDoc.DocumentObjectModel
         }
         [DV]
         internal NBool _italic = NBool.NullValue;
+
+		// SRG
+		//@{
+		public bool Strikethrough
+		{
+			get { return _strikethrough.Value; }
+			set { _strikethrough.Value = value; }
+		}
+		[DV]
+		internal NBool _strikethrough = NBool.NullValue;
+		//@}
 
         // THHO4STLA Implementation for Strikethrough in the forum: http://forum.pdfsharp.net/viewtopic.php?p=4636#p4636
         /// <summary>
@@ -303,6 +326,11 @@ namespace MigraDoc.DocumentObjectModel
                 fp |= FontProperties.Superscript;
             if (!_subscript.IsNull)
                 fp |= FontProperties.Subscript;
+			// SRG
+			//@{
+			if (!_strikethrough.IsNull)
+				fp |= FontProperties.Strikethrough;
+			//@}
             return fp;
         }
 
@@ -342,6 +370,14 @@ namespace MigraDoc.DocumentObjectModel
                         serializer.Write("\\italic");
                         return;
                     }
+					// SRG
+					//@{
+					if (notNull == FontProperties.Strikethrough && _strikethrough.Value)
+					{
+						serializer.Write("\\strikethrough");
+						return;
+					}
+					//@}
                     if (notNull == FontProperties.Color)
                     {
                         serializer.Write("\\fontcolor(" + _color + ")");
@@ -369,6 +405,12 @@ namespace MigraDoc.DocumentObjectModel
 
                 if (!_italic.IsNull)
                     serializer.WriteSimpleAttribute("Italic", Italic);
+
+				// SRG
+				//@{
+				if (!_strikethrough.IsNull)
+					serializer.WriteSimpleAttribute("Strikethrough", Strikethrough);
+				//@}
 
                 if (!_underline.IsNull)
                     serializer.WriteSimpleAttribute("Underline", Underline);
@@ -410,6 +452,12 @@ namespace MigraDoc.DocumentObjectModel
 
                 if (!_italic.IsNull && (font == null || Italic != font.Italic || font._italic.IsNull))
                     serializer.WriteSimpleAttribute("Italic", Italic);
+
+				// SRG
+				//@{
+				if (!_strikethrough.IsNull && (font == null || Strikethrough != font.Strikethrough || font._strikethrough.IsNull))
+					serializer.WriteSimpleAttribute("Strikethrough", Strikethrough);
+				//@}
 
                 if (!_underline.IsNull && (font == null || Underline != font.Underline || font._underline.IsNull))
                     serializer.WriteSimpleAttribute("Underline", Underline);

@@ -523,6 +523,16 @@ namespace MigraDoc.DocumentObjectModel
             set { Font.Italic = value; }
         }
 
+		// SRG
+		//@{
+		[DV]
+		public bool Strikethrough
+		{
+			get { return Font.Strikethrough; }
+			set { Font.Strikethrough = value; }
+		}
+		//@}
+
         /// <summary>
         /// Gets or sets the underline property.
         /// </summary>

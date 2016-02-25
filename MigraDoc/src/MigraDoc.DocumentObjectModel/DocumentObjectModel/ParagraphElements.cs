@@ -210,6 +210,13 @@ namespace MigraDoc.DocumentObjectModel
                 formattedText.Italic = true;
             if ((textFormat & TextFormat.NotItalic) == TextFormat.NotItalic)
                 formattedText.Italic = false;
+			// SRG
+			//@{
+			if ((textFormat & TextFormat.Strikethrough) == TextFormat.Strikethrough)
+				formattedText.Strikethrough = true;
+			if ((textFormat & TextFormat.NoStrikethrough) == TextFormat.NoStrikethrough)
+				formattedText.Strikethrough = false;
+			//@}
             if ((textFormat & TextFormat.Underline) == TextFormat.Underline)
                 formattedText.Underline = Underline.Single;
             if ((textFormat & TextFormat.NoUnderline) == TextFormat.NoUnderline)

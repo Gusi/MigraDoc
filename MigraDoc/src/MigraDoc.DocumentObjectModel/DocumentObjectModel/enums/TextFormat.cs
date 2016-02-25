@@ -69,6 +69,12 @@ namespace MigraDoc.DocumentObjectModel
         /// <summary>
         /// Specifies text without underline.
         /// </summary>
-        NoUnderline = 0x000030
+        NoUnderline = 0x000030,
+
+		// SRG
+		//@{
+		Strikethrough = 0x000040,
+		NoStrikethrough = 0x0000C0,
+		//@}
     }
 }
