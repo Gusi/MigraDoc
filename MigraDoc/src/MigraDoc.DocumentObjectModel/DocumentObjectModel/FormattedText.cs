@@ -531,6 +531,13 @@ namespace MigraDoc.DocumentObjectModel
 			get { return Font.Strikethrough; }
 			set { Font.Strikethrough = value; }
 		}
+
+		[DV]
+		public MigraDoc.DocumentObjectModel.Rectangle Rectangle
+		{
+			get { return Font.Rectangle; }
+			set { Font.Rectangle = value; }
+		}
 		//@}
 
         /// <summary>

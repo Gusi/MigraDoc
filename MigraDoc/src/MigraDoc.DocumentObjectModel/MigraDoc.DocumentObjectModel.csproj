@@ -190,6 +190,7 @@
     <Compile Include="DocumentObjectModel\Paragraph.cs" />
     <Compile Include="DocumentObjectModel\ParagraphElements.cs" />
     <Compile Include="DocumentObjectModel\ParagraphFormat.cs" />
+    <Compile Include="DocumentObjectModel\Rectangle.cs" />
     <Compile Include="DocumentObjectModel\Section.cs" />
     <Compile Include="DocumentObjectModel\Sections.cs" />
     <Compile Include="DocumentObjectModel\Serializer.cs" />

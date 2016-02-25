@@ -871,6 +871,11 @@ namespace MigraDoc.Rendering
             RenderByInfos(_currentXPosition, top, new RenderInfo[] { renderInfo });
 
             RenderUnderline(contentArea.Width, true);
+			// SRG
+			//@{
+			RenderStrikethrough(contentArea.Width, true);
+			RenderRectangle(contentArea.Width, true);
+			//@}
             RealizeHyperlink(contentArea.Width);
 
             _currentXPosition += contentArea.Width;
@@ -909,6 +914,11 @@ namespace MigraDoc.Rendering
         void RenderBookmarkField()
         {
             RenderUnderline(0, false);
+			// SRG
+			//@{
+			RenderStrikethrough(0, false);
+			RenderRectangle(0, false);
+			//@}
         }
 
         void RenderPageRefField(PageRefField pageRefField)
@@ -944,6 +954,11 @@ namespace MigraDoc.Rendering
         {
             XUnit width = GetSpaceWidth(character);
             RenderUnderline(width, false);
+			// SRG
+			//@{
+			RenderStrikethrough(0, false);
+			RenderRectangle(0, false);
+			//@}
             RealizeHyperlink(width);
             _currentXPosition += width;
         }
@@ -951,6 +966,11 @@ namespace MigraDoc.Rendering
         void RenderLinebreak()
         {
             RenderUnderline(0, false);
+			// SRG
+			//@{
+			RenderStrikethrough(0, false);
+			RenderRectangle(0, false);
+			//@}
             RealizeHyperlink(0);
         }
 
@@ -968,6 +988,11 @@ namespace MigraDoc.Rendering
         {
             TabOffset tabOffset = NextTabOffset();
             RenderUnderline(tabOffset.Offset, false);
+			// SRG
+			//@{
+			RenderStrikethrough(tabOffset.Offset, false);
+			RenderRectangle(tabOffset.Offset, false);
+			//@}
             RenderTabLeader(tabOffset);
             RealizeHyperlink(tabOffset.Offset);
             _currentXPosition += tabOffset.Offset;
@@ -1066,12 +1091,22 @@ namespace MigraDoc.Rendering
             {
                 XUnit wordDistance = CurrentWordDistance;
                 RenderUnderline(wordDistance, false);
+				// SRG
+				//@{
+				RenderStrikethrough(wordDistance, false);
+				RenderRectangle(wordDistance, false);
+				//@}
                 RealizeHyperlink(wordDistance);
                 _currentXPosition += wordDistance;
             }
             else
             {
                 RenderUnderline(0, false);
+				// SRG
+				//@{
+				RenderStrikethrough(0, false);
+				RenderRectangle(0, false);
+				//@}
                 RealizeHyperlink(0);
             }
         }
@@ -1097,6 +1132,11 @@ namespace MigraDoc.Rendering
             _gfx.DrawString(word, xFont, CurrentBrush, _currentXPosition, CurrentBaselinePosition);
             XUnit wordWidth = MeasureString(word);
             RenderUnderline(wordWidth, true);
+			// SRG
+			//@{
+			RenderStrikethrough(wordWidth, true);
+			RenderRectangle(wordWidth, true);
+			//@}
             RealizeHyperlink(wordWidth);
             _currentXPosition += wordWidth;
         }
@@ -2417,6 +2457,145 @@ namespace MigraDoc.Rendering
             }
         }
 
+		// SRG
+		//@{
+		void RenderStrikethrough(XUnit width, bool isWord)
+		{
+			XPen pen = GetStrikethroughPen(isWord);
+
+			bool penChanged = StrikethroughPenChanged(pen);
+			if (penChanged)
+			{
+				if (_currentStrikethroughPen != null)
+					EndStrikethrough(_currentStrikethroughPen, _currentXPosition);
+
+				if (pen != null)
+					StartStrikethrough(_currentXPosition);
+
+				_currentStrikethroughPen = pen;
+			}
+
+			if (_currentLeaf.Current == _endLeaf.Current)
+			{
+				if (_currentStrikethroughPen != null)
+					EndStrikethrough(_currentStrikethroughPen, _currentXPosition + width);
+
+				_currentStrikethroughPen = null;
+			}
+		}
+
+		void StartStrikethrough(XUnit xPosition)
+		{
+			_strikethroughStartPos = xPosition;
+		}
+
+		void EndStrikethrough(XPen pen, XUnit xPosition)
+		{
+			//Removed KlPo 06.06.07
+			//XUnit yPosition = this.currentYPosition + this.currentVerticalInfo.height + pen.Width / 2;
+			//yPosition -= 0.66 * this.currentVerticalInfo.descent;
+
+			//New KlPo 
+			XUnit yPosition = CurrentBaselinePosition;
+			yPosition -= 1.4 * _currentVerticalInfo.Descent;
+			_gfx.DrawLine(pen, _strikethroughStartPos, yPosition, xPosition, yPosition);
+		}
+
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		void RenderRectangle(XUnit width, bool isWord)
+		{
+			XPen pen = GetRectanglePen(isWord);
+
+			bool penChanged = RectanglePenChanged(pen);
+			if (penChanged)
+			{
+				if (_currentRectanglePen != null)
+					EndRectangle(_currentRectanglePen, _currentXPosition);
+
+				if (pen != null)
+					StartRectangle(_currentXPosition);
+
+				_currentRectanglePen = pen;
+			}
+
+			if (_currentLeaf.Current == _endLeaf.Current)
+			{
+				if (_currentRectanglePen != null)
+					EndRectangle(_currentRectanglePen, _currentXPosition + width);
+
+				_currentRectanglePen = null;
+			}
+		}
+
+		void StartRectangle(XUnit xPosition)
+		{
+			_rectangleStartPos = xPosition;
+		}
+
+		void EndRectangle(XPen pen, XUnit xPosition)
+		{
+			XUnit yHeight = _currentVerticalInfo.Height - _currentVerticalInfo.Descent * 2;
+			XUnit yStart = CurrentBaselinePosition - yHeight;
+			XUnit xMargin = XUnit.FromCentimeter(CurrentDomFont.Rectangle.Padding);
+			XUnit yMargin = XUnit.FromCentimeter(CurrentDomFont.Rectangle.Padding);
+
+			// Ajustar al ancho minimo
+			double width = xPosition - _rectangleStartPos + xMargin * 2;
+			if (XUnit.FromCentimeter(CurrentDomFont.Rectangle.MinWidth) > width)
+				xMargin += (XUnit.FromCentimeter(CurrentDomFont.Rectangle.MinWidth) - width) / 2.0;
+
+			double height = yHeight + yMargin * 2;
+			if (XUnit.FromCentimeter(CurrentDomFont.Rectangle.MinHeight) > height)
+				yMargin += (XUnit.FromCentimeter(CurrentDomFont.Rectangle.MinHeight) - height) / 2.0;
+
+			if (CurrentDomFont.Rectangle.CornerRadius > 0.0)
+			{
+				XUnit radius = XUnit.FromCentimeter(CurrentDomFont.Rectangle.CornerRadius);
+				//DrawRoundedRectangle(XPen pen, double x, double y, double width, double height, double ellipseWidth, double ellipseHeight)
+				_gfx.DrawRoundedRectangle(
+					pen,
+					_rectangleStartPos - xMargin,
+					yStart - yMargin,
+					xPosition - _rectangleStartPos + xMargin * 2,
+					yHeight + yMargin * 2,
+					radius, radius);
+			}
+			else
+			{
+				_gfx.DrawRectangle(
+					pen,
+					_rectangleStartPos - xMargin,
+					yStart - yMargin,
+					xPosition - _rectangleStartPos + xMargin * 2,
+					yHeight + yMargin * 2);
+			}
+
+			/*
+			void DrawRectangle(XGraphics gfx, int number)
+			{
+				BeginBox(gfx, number, "DrawRectangle");
+				XPen pen = new XPen(XColors.Navy, Math.PI);
+				gfx.DrawRectangle(pen, 10, 0, 100, 60);
+				gfx.DrawRectangle(XBrushes.DarkOrange, 130, 0, 100, 60);
+				gfx.DrawRectangle(pen, XBrushes.DarkOrange, 10, 80, 100, 60);
+				gfx.DrawRectangle(pen, XBrushes.DarkOrange, 150, 80, 60, 60);
+				EndBox(gfx);
+			}
+
+			void DrawRoundedRectangle(XGraphics gfx, int number)
+			{
+				BeginBox(gfx, number, "DrawRoundedRectangle");
+				XPen pen = new XPen(XColors.RoyalBlue, Math.PI);
+				gfx.DrawRoundedRectangle(pen, 10, 0, 100, 60, 30, 20);
+				gfx.DrawRoundedRectangle(XBrushes.Orange, 130, 0, 100, 60, 30, 20);
+				gfx.DrawRoundedRectangle(pen, XBrushes.Orange, 10, 80, 100, 60, 30, 20);
+				gfx.DrawRoundedRectangle(pen, XBrushes.Orange, 150, 80, 60, 60, 20, 20);
+				EndBox(gfx);
+			} 
+			*/
+		}
+		//@}
+
         void StartUnderline(XUnit xPosition)
         {
             _underlineStartPos = xPosition;
@@ -2431,6 +2610,15 @@ namespace MigraDoc.Rendering
 
         XPen _currentUnderlinePen;
         XUnit _underlineStartPos;
+
+		// SRG
+		//@{
+		XPen _currentStrikethroughPen = null;
+		XUnit _strikethroughStartPos;
+
+		XPen _currentRectanglePen = null;
+		XUnit _rectangleStartPos;
+		//@}
 
         bool UnderlinePenChanged(XPen pen)
         {
@@ -2448,6 +2636,43 @@ namespace MigraDoc.Rendering
 
             return pen.Width != _currentUnderlinePen.Width;
         }
+
+		// SRG
+		//@{
+		bool StrikethroughPenChanged(XPen pen)
+		{
+			if (pen == null && _currentStrikethroughPen == null)
+				return false;
+
+			if (pen == null && _currentStrikethroughPen != null)
+				return true;
+
+			if (pen != null && _currentStrikethroughPen == null)
+				return true;
+
+			if (pen.Color != _currentStrikethroughPen.Color)
+				return true;
+
+			return pen.Width != _currentStrikethroughPen.Width;
+		}
+
+		bool RectanglePenChanged(XPen pen)
+		{
+			if (pen == null && _currentRectanglePen == null)
+				return false;
+
+			if (pen == null && _currentRectanglePen != null)
+				return true;
+
+			if (pen != null && _currentRectanglePen == null)
+				return true;
+
+			if (pen.Color != _currentRectanglePen.Color)
+				return true;
+
+			return pen.Width != _currentRectanglePen.Width;
+		}
+		//@}
 
         RenderInfo CurrentImageRenderInfo
         {
@@ -2511,6 +2736,75 @@ namespace MigraDoc.Rendering
             }
             return pen;
         }
+
+		// Gusi
+		//@{
+		XPen GetStrikethroughPen(bool isWord)
+		{
+			Font font = CurrentDomFont;
+			if (!font.Strikethrough)
+				return null;
+			/*
+			Underline underlineType = font.Underline;
+			Underline underlineType = Underline.Single;
+			if (underlineType == Underline.None)
+				return null;
+
+			if (underlineType == Underline.Words && !isWord)
+				return null;
+			*/
+#if noCMYK
+		XPen pen = new XPen(XColor.FromArgb(font.Color.Argb), font.Size / 16);
+#else
+			XPen pen = new XPen(ColorHelper.ToXColor(font.Color, _paragraph.Document.UseCmykColor), font.Size / 16);
+#endif
+			/*
+		switch (font.Striketrough)
+		{
+			case FontLineStyle.DotDash:
+				pen.DashStyle = XDashStyle.DashDot;
+			break;
+
+			case FontLineStyle.DotDotDash:
+				pen.DashStyle = XDashStyle.DashDotDot;
+			break;
+
+			case FontLineStyle.Dash:
+				pen.DashStyle = XDashStyle.Dash;
+			break;
+
+			case FontLineStyle.Dotted:
+				pen.DashStyle = XDashStyle.Dot;
+			break;
+
+			case FontLineStyle.Single:
+			default:
+				pen.DashStyle = XDashStyle.Solid;
+			break;
+		}
+		*/
+			pen.DashStyle = XDashStyle.Solid;
+			return pen;
+		}
+
+		XPen GetRectanglePen(bool isWord)
+		{
+			Font font = CurrentDomFont;
+			if (font.Rectangle == DocumentObjectModel.Rectangle.Empty)
+				return null;
+#if noCMYK
+		XPen pen = new XPen(XColor.FromArgb(font.Color.Argb), font.Size / 16);
+#else
+			XPen pen = new XPen(ColorHelper.ToXColor(font.Color, _paragraph.Document.UseCmykColor), font.Size / 16);
+#endif
+
+			pen.DashStyle = (XDashStyle)font.Rectangle.DashStyle;
+			if (font.Rectangle.DashPattern != null)
+				pen.DashPattern = font.Rectangle.DashPattern;
+
+			return pen;
+		}
+		//@}
 
         private static XStringFormat StringFormat
         {

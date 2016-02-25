@@ -550,6 +550,9 @@
     <Compile Include="..\MigraDoc.DocumentObjectModel\DocumentObjectModel\ParagraphFormat.cs">
       <Link>DocumentObjectModel\ParagraphFormat.cs</Link>
     </Compile>
+    <Compile Include="..\MigraDoc.DocumentObjectModel\DocumentObjectModel\Rectangle.cs">
+      <Link>DocumentObjectModel\Rectangle.cs</Link>
+    </Compile>
     <Compile Include="..\MigraDoc.DocumentObjectModel\DocumentObjectModel\Section.cs">
       <Link>DocumentObjectModel\Section.cs</Link>
     </Compile>

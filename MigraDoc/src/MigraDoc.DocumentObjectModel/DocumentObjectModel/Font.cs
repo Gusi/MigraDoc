@@ -101,6 +101,8 @@ namespace MigraDoc.DocumentObjectModel
 			//@{
 			if (!font._strikethrough.IsNull && (refFont == null || font.Strikethrough != refFont.Strikethrough))
 				Strikethrough = font.Strikethrough;
+			if (!font._rectangle.IsNull && (refFont == null || font.Rectangle != refFont.Rectangle))
+				Rectangle = font.Rectangle;
 			//@}
 
             if (!font._subscript.IsNull && (refFont == null || font.Subscript != refFont.Subscript))
@@ -138,7 +140,9 @@ namespace MigraDoc.DocumentObjectModel
 			// SRG
 			//@{
 			if (!font._strikethrough.IsNull)
-				this.Strikethrough = font.Strikethrough;
+				Strikethrough = font.Strikethrough;
+			if (!font._rectangle.IsNull)
+				Rectangle = font.Rectangle;
 			//@}
 
             if (!font._subscript.IsNull)
@@ -208,6 +212,14 @@ namespace MigraDoc.DocumentObjectModel
 		}
 		[DV]
 		internal NBool _strikethrough = NBool.NullValue;
+
+		public Rectangle Rectangle
+		{
+			get { return _rectangle; }
+			set { _rectangle = value; }
+		}
+		[DV]
+		internal Rectangle _rectangle = Rectangle.Empty;
 		//@}
 
         // THHO4STLA Implementation for Strikethrough in the forum: http://forum.pdfsharp.net/viewtopic.php?p=4636#p4636
@@ -330,6 +342,8 @@ namespace MigraDoc.DocumentObjectModel
 			//@{
 			if (!_strikethrough.IsNull)
 				fp |= FontProperties.Strikethrough;
+			if (!_rectangle.IsNull)
+				fp |= FontProperties.Rectangle;
 			//@}
             return fp;
         }
@@ -377,6 +391,11 @@ namespace MigraDoc.DocumentObjectModel
 						serializer.Write("\\strikethrough");
 						return;
 					}
+					if (notNull == FontProperties.Rectangle)
+					{
+						serializer.Write("\\rectangle(" + _rectangle.ToString() + ")");
+						return;
+					}
 					//@}
                     if (notNull == FontProperties.Color)
                     {
@@ -410,6 +429,8 @@ namespace MigraDoc.DocumentObjectModel
 				//@{
 				if (!_strikethrough.IsNull)
 					serializer.WriteSimpleAttribute("Strikethrough", Strikethrough);
+				if (!_rectangle.IsNull)
+					serializer.WriteSimpleAttribute("Rectangle", Rectangle);
 				//@}
 
                 if (!_underline.IsNull)
@@ -457,6 +478,8 @@ namespace MigraDoc.DocumentObjectModel
 				//@{
 				if (!_strikethrough.IsNull && (font == null || Strikethrough != font.Strikethrough || font._strikethrough.IsNull))
 					serializer.WriteSimpleAttribute("Strikethrough", Strikethrough);
+				if (!_rectangle.IsNull && (font == null || Rectangle != font.Rectangle || font._rectangle.IsNull))
+					serializer.WriteSimpleAttribute("Rectangle", Rectangle);
 				//@}
 
                 if (!_underline.IsNull && (font == null || Underline != font.Underline || font._underline.IsNull))
