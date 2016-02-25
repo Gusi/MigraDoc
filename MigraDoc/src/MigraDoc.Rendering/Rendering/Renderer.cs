@@ -28,6 +28,7 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
+using System.Diagnostics;
 using MigraDoc.DocumentObjectModel;
 using PdfSharp.Drawing;
 using MigraDoc.DocumentObjectModel.Tables;
@@ -158,7 +159,8 @@ namespace MigraDoc.Rendering
             else if (documentObject is TextFrame)
                 renderer = new TextFrameRenderer(gfx, (TextFrame)documentObject, fieldInfos);
             else if (documentObject is Chart)
-                renderer = new ChartRenderer(gfx, (Chart)documentObject, fieldInfos);
+				Debug.Assert(false);
+                //renderer = new ChartRenderer(gfx, (Chart)documentObject, fieldInfos);
             else if (documentObject is Image)
                 renderer = new ImageRenderer(gfx, (Image)documentObject, fieldInfos);
 
@@ -189,7 +191,8 @@ namespace MigraDoc.Rendering
             else if (renderInfo.DocumentObject is TextFrame)
                 renderer = new TextFrameRenderer(gfx, renderInfo, fieldInfos);
             else if (renderInfo.DocumentObject is Chart)
-                renderer = new ChartRenderer(gfx, renderInfo, fieldInfos);
+				Debug.Assert(false);
+                //renderer = new ChartRenderer(gfx, renderInfo, fieldInfos);
             //else if (renderInfo.DocumentObject is Chart)
             //  renderer = new ChartRenderer(gfx, renderInfo, fieldInfos);
             else if (renderInfo.DocumentObject is Image)

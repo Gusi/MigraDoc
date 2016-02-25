@@ -115,10 +115,6 @@
       <Project>{5384ce57-1f94-4d22-860d-2e9c1ac12ddf}</Project>
       <Name>PdfSharp-gdi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\PDFsharp\src\PdfSharp.Charting-gdi\PdfSharp.Charting-gdi.csproj">
-      <Project>{cfdb7d46-ea8d-47de-b10a-9e755a1b48ba}</Project>
-      <Name>PdfSharp.Charting-gdi</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\MigraDoc.Rendering\Properties\AssemblyInfo.cs">
@@ -126,36 +122,6 @@
     </Compile>
     <Compile Include="..\MigraDoc.Rendering\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\MigraDoc.Rendering\Rendering.ChartMapper\AxisMapper.cs">
-      <Link>Rendering.ChartMapper\AxisMapper.cs</Link>
-    </Compile>
-    <Compile Include="..\MigraDoc.Rendering\Rendering.ChartMapper\ChartMapper.cs">
-      <Link>Rendering.ChartMapper\ChartMapper.cs</Link>
-    </Compile>
-    <Compile Include="..\MigraDoc.Rendering\Rendering.ChartMapper\DataLabelMapper.cs">
-      <Link>Rendering.ChartMapper\DataLabelMapper.cs</Link>
-    </Compile>
-    <Compile Include="..\MigraDoc.Rendering\Rendering.ChartMapper\FillFormatMapper.cs">
-      <Link>Rendering.ChartMapper\FillFormatMapper.cs</Link>
-    </Compile>
-    <Compile Include="..\MigraDoc.Rendering\Rendering.ChartMapper\FontMapper.cs">
-      <Link>Rendering.ChartMapper\FontMapper.cs</Link>
-    </Compile>
-    <Compile Include="..\MigraDoc.Rendering\Rendering.ChartMapper\LegendMapper.cs">
-      <Link>Rendering.ChartMapper\LegendMapper.cs</Link>
-    </Compile>
-    <Compile Include="..\MigraDoc.Rendering\Rendering.ChartMapper\LineFormatMapper.cs">
-      <Link>Rendering.ChartMapper\LineFormatMapper.cs</Link>
-    </Compile>
-    <Compile Include="..\MigraDoc.Rendering\Rendering.ChartMapper\PlotAreaMapper.cs">
-      <Link>Rendering.ChartMapper\PlotAreaMapper.cs</Link>
-    </Compile>
-    <Compile Include="..\MigraDoc.Rendering\Rendering.ChartMapper\SeriesCollectionMapper.cs">
-      <Link>Rendering.ChartMapper\SeriesCollectionMapper.cs</Link>
-    </Compile>
-    <Compile Include="..\MigraDoc.Rendering\Rendering.ChartMapper\XValuesMapper.cs">
-      <Link>Rendering.ChartMapper\XValuesMapper.cs</Link>
     </Compile>
     <Compile Include="..\MigraDoc.Rendering\Rendering.Resources\Messages2.cs">
       <Link>Rendering.Resources\Messages2.cs</Link>
@@ -165,15 +131,6 @@
     </Compile>
     <Compile Include="..\MigraDoc.Rendering\Rendering\BordersRenderer.cs">
       <Link>Rendering\BordersRenderer.cs</Link>
-    </Compile>
-    <Compile Include="..\MigraDoc.Rendering\Rendering\ChartFormatInfo.cs">
-      <Link>Rendering\ChartFormatInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\MigraDoc.Rendering\Rendering\ChartRenderer.cs">
-      <Link>Rendering\ChartRenderer.cs</Link>
-    </Compile>
-    <Compile Include="..\MigraDoc.Rendering\Rendering\ChartRenderInfo.cs">
-      <Link>Rendering\ChartRenderInfo.cs</Link>
     </Compile>
     <Compile Include="..\MigraDoc.Rendering\Rendering\ColorHelper.cs">
       <Link>Rendering\ColorHelper.cs</Link>
